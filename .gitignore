@@ -1,4 +1,7 @@
 __pycache__/
 *.qmlc
 settings.json
+.DS_Store
+.idea/
+venv
 
