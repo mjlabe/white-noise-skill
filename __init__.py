@@ -1,3 +1,4 @@
+import time
 from multiprocessing import Process
 from os.path import join, abspath, dirname, isfile
 
@@ -14,7 +15,7 @@ class WhiteNoise(MycroftSkill):
         MycroftSkill.__init__(self)
 
     def initialize(self):
-        # Register list of white noise titles that are held in a padatious entity
+        # Initialize variables and path to audio file
         self.process = None
         self.kill_process = None
         self.audio_file = self.settings.get('audio_file_path',
@@ -27,8 +28,8 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
 
         secs = None
-        if message.data['duration']:
-            duration = message.data["duration"]
+        if message.data.get('duration', None):
+            duration = message.data.get("duration")
             secs = self._extract_duration(duration)
         if isfile(self.audio_file):
             self.process = play_mp3(self.audio_file)
@@ -40,8 +41,8 @@ class WhiteNoise(MycroftSkill):
             self.kill = Process(target=self.kill_noise, args=(secs,))
         self.kill.start()
 
-    def kill_noise(self, time):
-        time.sleep(time)
+    def kill_noise(self, play_time):
+        time.sleep(play_time)
         self.log.info('killing')
         self.process.terminate()
         self.process.wait()
