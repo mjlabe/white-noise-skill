@@ -1,4 +1,5 @@
 import time
+import requests
 from multiprocessing import Process
 from os.path import join, abspath, dirname, isfile
 
@@ -16,10 +17,11 @@ class WhiteNoise(MycroftSkill):
 
     def initialize(self):
         # Initialize variables and path to audio file
+        # self.download_default_audio_file()
         self.process = None
         self.kill_process = None
         self.audio_file = self.settings.get('audio_file_path',
-                                            join(abspath(dirname(__file__)), 'audio_files', 'fan.mp3'))
+                                            join(abspath(dirname(__file__)), 'audio_files', 'fan-1.mp3'))
 
     @intent_file_handler('noise.white.intent')
     def handle_noise_white(self, message):
@@ -65,6 +67,19 @@ class WhiteNoise(MycroftSkill):
             unit = 360
 
         return num * unit
+
+    # def download_default_audio_file(self):
+    #     url = "https://drive.google.com/file/d/0B4uElPMLJjOlVmt0dk1IQmpEOGc/view?usp=sharing"
+    #     file_path = '/Users/mlabelle/Documents/test/test/white_noise_fan.mp3'
+    #     CHUNK_SIZE = 32768
+    #
+    #     session = requests.Session()
+    #
+    #     response = session.get(url, stream=True)
+    #     with open(file_path, "wb") as f:
+    #         for chunk in response.iter_content(CHUNK_SIZE):
+    #             if chunk:  # filter out keep-alive new chunks
+    #                 f.write(chunk)
 
     def stop(self):
         if self.process and self.process.poll() is None:
