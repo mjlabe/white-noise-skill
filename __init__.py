@@ -39,7 +39,7 @@ class WhiteNoise(MycroftSkill):
 
         if secs:
             self.kill = Process(target=self.kill_noise, args=(secs,))
-        self.kill.start()
+            self.kill.start()
 
     def kill_noise(self, play_time):
         time.sleep(play_time)
