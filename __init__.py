@@ -20,6 +20,7 @@ class WhiteNoise(MycroftSkill):
     def initialize(self):
         # Initialize variables and path to audio file
         # self.download_default_audio_file()
+        self.url = self.settings.get('audio_file_url', None)
         self.audio_service = AudioService(self.bus)
         self.process = None
         self.kill_process = None
@@ -27,12 +28,12 @@ class WhiteNoise(MycroftSkill):
         if isfile(join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')):
             self.audio_file = join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')
 
-        elif self.settings.get('audio_file_path'):
-            url = self.settings.get('audio_file_path')
-            self.log.info('Using custom mp3 from ' + url)
-            if self._valid_extension(url):
-                self.audio_file = url
+        elif self.url:
+            self.log.info('Using custom mp3 from ' + self.url)
+            if self._valid_extension(self.url):
+                self.audio_file = self.url
             else:
+                self.url = None
                 self.log.info('Error, Custom file must be mp3, using default.')
                 self.speak_dialog("Only mp3 files are accepted. Using default.")
 
@@ -51,7 +52,7 @@ class WhiteNoise(MycroftSkill):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
         self.log.info("Playing " + self.audio_file)
-        if isfile(self.audio_file):
+        if self.url or isfile(self.audio_file):
             self.process = self.audio_service.play(self.audio_file)
         else:
             self.log.error(self.audio_file + " not found.")

@@ -3,7 +3,7 @@ skillMetadata:
   sections:
     - name: MP3 URL
       fields:
-        - name: audio_file_path
+        - name: audio_file_url
           type: text
           label: MP3 URL
           value: ""
