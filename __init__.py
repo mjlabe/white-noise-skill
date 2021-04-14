@@ -9,7 +9,6 @@ from mycroft.audio import wait_while_speaking
 from mycroft.skills.context import *
 from mycroft.skills.core import MycroftSkill
 from mycroft.skills.audioservice import AudioService
-from mycroft.util import play_mp3
 from mycroft.util.parse import extract_number
 
 
@@ -19,8 +18,8 @@ class WhiteNoise(MycroftSkill):
 
     def initialize(self):
         # Initialize variables and path to audio file
-        # self.download_default_audio_file()
-        self.url = self.settings.get('audio_file_url', None)
+        self.settings_change_callback = self.on_settings_changed
+        self.url = self.settings.get('audio_file_url', '')
         self.audio_service = AudioService(self.bus)
         self.process = None
         self.kill_process = None
@@ -51,6 +50,7 @@ class WhiteNoise(MycroftSkill):
         if message.data.get('duration', None):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
+        self.log.info("URL: " + self.settings.get('audio_file_url', None))
         self.log.info("Playing " + self.audio_file)
         if self.url or isfile(self.audio_file):
             self.process = self.audio_service.play(self.audio_file)
@@ -110,6 +110,10 @@ class WhiteNoise(MycroftSkill):
         if ext != '.mp3':
             return False
         return True
+
+    def on_settings_changed(self):
+        # download new file
+        pass
 
     def stop(self):
         if self.process and self.process.poll() is None:
