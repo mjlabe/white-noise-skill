@@ -22,20 +22,21 @@ class WhiteNoise(MycroftSkill):
         self.process = None
         self.kill_process = None
 
-        file_name = 'fan.mp3'
         if isfile(join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')):
-            file_name = 'custom.mp3'
+            self.audio_file = join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')
+
         elif self.settings.get('audio_file_path'):
             url = self.settings.get('audio_file_path')
             self.log.info('Using custom mp3 from ' + url)
             if self._valid_extension(url):
-                file_name = url
+                self.audio_file = url
             else:
                 self.log.info('Error, Custom file must be mp3, using default.')
                 self.speak_dialog("Only mp3 files are accepted. Using default.")
+
         else:
             self.log.info('Custom mp3 not found, using default.')
-        self.audio_file = join(abspath(dirname(__file__)), 'audio_files', file_name)
+            self.audio_file = join(abspath(dirname(__file__)), 'audio_files', 'fan.mp3')
 
     @intent_file_handler('noise.white.intent')
     def handle_noise_white(self, message):
