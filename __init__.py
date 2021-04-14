@@ -18,6 +18,7 @@ class WhiteNoise(MycroftSkill):
 
     def initialize(self):
         # Initialize variables and path to audio file
+        # self.download_default_audio_file()
         self.process = None
         self.kill_process = None
         if join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3'):
@@ -36,8 +37,10 @@ class WhiteNoise(MycroftSkill):
         if message.data.get('duration', None):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
-        if not isfile(self.audio_file):
-            self.speak_dialog("Audio file not found. Please try reinstalling.")
+        if isfile(self.audio_file):
+            self.process = play_mp3(self.audio_file)
+        else:
+            self.speak_dialog("Audio file not found. Please try re-installing.")
             return
 
         if secs:
