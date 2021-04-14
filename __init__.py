@@ -45,12 +45,6 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         self.speak_dialog('noise.white')
         wait_while_speaking()
-        for i in range(10, 0, -1):
-            print(i)
-            wait_while_speaking()
-            self.speak_dialog('starting white noise in ' + str(i))
-            wait_while_speaking()
-            time.sleep(1)
 
         secs = None
         if message.data.get('duration', None):
