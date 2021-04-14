@@ -37,9 +37,11 @@ class WhiteNoise(MycroftSkill):
         if message.data.get('duration', None):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
+        print("playing " + self.audio_file)
         if isfile(self.audio_file):
             self.process = play_mp3(self.audio_file)
         else:
+            print(self.audio_file + " not found.")
             self.speak_dialog("Audio file not found. Please try re-installing.")
             return
 
