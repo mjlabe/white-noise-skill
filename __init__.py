@@ -8,6 +8,7 @@ from mycroft import intent_file_handler
 from mycroft.audio import wait_while_speaking
 from mycroft.skills.context import *
 from mycroft.skills.core import MycroftSkill
+from mycroft.skills.audioservice import AudioService
 from mycroft.util import play_mp3
 from mycroft.util.parse import extract_number
 
@@ -19,6 +20,7 @@ class WhiteNoise(MycroftSkill):
     def initialize(self):
         # Initialize variables and path to audio file
         # self.download_default_audio_file()
+        self.audio_service = AudioService(self.bus)
         self.process = None
         self.kill_process = None
 
@@ -50,7 +52,7 @@ class WhiteNoise(MycroftSkill):
             secs = self._extract_duration(duration)
         self.log.info("Playing " + self.audio_file)
         if isfile(self.audio_file):
-            self.process = play_mp3(self.audio_file)
+            self.process = self.audio_service.play(self.audio_file)
         else:
             self.log.error(self.audio_file + " not found.")
             self.speak_dialog("Audio file not found. Please try re-installing.")
