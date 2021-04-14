@@ -21,9 +21,10 @@ class WhiteNoise(MycroftSkill):
         # self.download_default_audio_file()
         self.process = None
         self.kill_process = None
-        if join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3'):
+        if isfile(join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')):
             file_name = 'custom.mp3'
         else:
+            self.log.info('Custom mp3 not found, using default.')
             file_name = 'fan.mp3'
         self.audio_file = join(abspath(dirname(__file__)), 'audio_files', file_name)
 
@@ -37,7 +38,7 @@ class WhiteNoise(MycroftSkill):
         if message.data.get('duration', None):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
-        self.log.info("playing " + self.audio_file)
+        self.log.info("Playing " + self.audio_file)
         if isfile(self.audio_file):
             self.process = play_mp3(self.audio_file)
         else:
