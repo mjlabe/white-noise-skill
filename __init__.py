@@ -27,6 +27,7 @@ class WhiteNoise(MycroftSkill):
             file_name = 'custom.mp3'
         elif self.settings.get('audio_file_path'):
             url = self.settings.get('audio_file_path')
+            self.log.info('Using custom mp3 from ' + url)
             if self._valid_extension(url):
                 file_name = url
             else:

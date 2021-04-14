@@ -1,10 +1,10 @@
 
 skillMetadata:
   sections:
-    - name: Audio File Path
+    - name: MP3 URL
       fields:
         - name: audio_file_path
           type: text
-          label: Audio File Path
+          label: MP3 URL
           value: ""
-          placeholder: URL for audio file.
+          placeholder: MP3 URL for audio file.
