@@ -7,4 +7,4 @@ skillMetadata:
           type: text
           label: Audio File Path
           value: ""
-          placeholder: Absolute path to audio file on system.
+          placeholder: URL for audio file.

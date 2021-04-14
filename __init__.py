@@ -21,11 +21,19 @@ class WhiteNoise(MycroftSkill):
         # self.download_default_audio_file()
         self.process = None
         self.kill_process = None
+
+        file_name = 'fan.mp3'
         if isfile(join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')):
             file_name = 'custom.mp3'
+        elif self.settings.get('audio_file_path'):
+            url = self.settings.get('audio_file_path')
+            if self._valid_extension(url):
+                file_name = url
+            else:
+                self.log.info('Error, Custom file must be mp3, using default.')
+                self.speak_dialog("Only mp3 files are accepted. Using default.")
         else:
             self.log.info('Custom mp3 not found, using default.')
-            file_name = 'fan.mp3'
         self.audio_file = join(abspath(dirname(__file__)), 'audio_files', file_name)
 
     @intent_file_handler('noise.white.intent')
@@ -75,21 +83,28 @@ class WhiteNoise(MycroftSkill):
 
         return num * unit
 
-    def download_default_audio_file(self):
+    def download_default_audio_file(self, url):
         session = requests.Session()
-        response = session.get(self.audio_file_url, stream=True)
+        response = session.get(url, stream=True)
 
         file_name = 'custom.mp3'
-        file_name_split = splitext(file_name)
-        ext = file_name_split[len(file_name_split) - 1]
-        if ext != '.mp3':
+        if not self._valid_extension(url):
             self.speak_dialog("Only mp3 files are accepted. Using default.")
+            return
 
         with open(join(self.audio_dir, file_name), "wb") as f:
             for chunk in response.iter_content(2048):
                 if chunk:  # filter out keep-alive new chunks
                     f.write(chunk)
                     f.flush()
+
+    @staticmethod
+    def _valid_extension(url):
+        file_name_split = splitext(url)
+        ext = file_name_split[len(file_name_split) - 1].split('?')[0]
+        if ext != '.mp3':
+            return False
+        return True
 
     def stop(self):
         if self.process and self.process.poll() is None:
