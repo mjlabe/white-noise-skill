@@ -46,6 +46,25 @@ class WhiteNoise(MycroftSkill):
         self.speak_dialog('noise.white')
         wait_while_speaking()
 
+        if self.url:
+            self.log.info('Using custom mp3 from ' + self.url)
+            if self._valid_extension(self.url):
+                self.audio_file = self.url
+            else:
+                self.url = None
+                self.log.info('Error, Custom file must be mp3, using default.')
+                self.speak_dialog("Only mp3 files are accepted. Using default.")
+
+        self.url = self.settings.get('audio_file_url', '')
+        if self.url:
+            self.log.info('Using custom mp3 from ' + self.url)
+            if self._valid_extension(self.url):
+                self.audio_file = self.url
+            else:
+                self.url = None
+                self.log.info('Error, Custom file must be mp3, using default.')
+                self.speak_dialog("Only mp3 files are accepted. Using default.")
+
         secs = None
         if message.data.get('duration', None):
             duration = message.data.get("duration")
