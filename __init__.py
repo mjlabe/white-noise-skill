@@ -1,8 +1,9 @@
+import re
 import time
-import requests
 from multiprocessing import Process
-from os.path import join, abspath, dirname, isfile
+from os.path import join, isfile, splitext, abspath, dirname
 
+import requests
 from mycroft import intent_file_handler
 from mycroft.audio import wait_while_speaking
 from mycroft.skills.context import *
@@ -17,11 +18,13 @@ class WhiteNoise(MycroftSkill):
 
     def initialize(self):
         # Initialize variables and path to audio file
-        # self.download_default_audio_file()
         self.process = None
         self.kill_process = None
-        self.audio_file = self.settings.get('audio_file_path',
-                                            join(abspath(dirname(__file__)), 'audio_files', 'fan-1.mp3'))
+        if join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3'):
+            file_name = 'custom.mp3'
+        else:
+            file_name = 'fan.mp3'
+        self.audio_file = join(abspath(dirname(__file__)), 'audio_files', file_name)
 
     @intent_file_handler('noise.white.intent')
     def handle_noise_white(self, message):
@@ -33,11 +36,9 @@ class WhiteNoise(MycroftSkill):
         if message.data.get('duration', None):
             duration = message.data.get("duration")
             secs = self._extract_duration(duration)
-        if isfile(self.audio_file):
-            self.process = play_mp3(self.audio_file)
-        else:
-            self.speak_dialog("Audio file not found. Using default.")
-            self.process = play_mp3(self.audio_file)
+        if not isfile(self.audio_file):
+            self.speak_dialog("Audio file not found. Please try reinstalling.")
+            return
 
         if secs:
             self.kill = Process(target=self.kill_noise, args=(secs,))
@@ -68,18 +69,21 @@ class WhiteNoise(MycroftSkill):
 
         return num * unit
 
-    # def download_default_audio_file(self):
-    #     url = "https://drive.google.com/file/d/0B4uElPMLJjOlVmt0dk1IQmpEOGc/view?usp=sharing"
-    #     file_path = '/Users/mlabelle/Documents/test/test/white_noise_fan.mp3'
-    #     CHUNK_SIZE = 32768
-    #
-    #     session = requests.Session()
-    #
-    #     response = session.get(url, stream=True)
-    #     with open(file_path, "wb") as f:
-    #         for chunk in response.iter_content(CHUNK_SIZE):
-    #             if chunk:  # filter out keep-alive new chunks
-    #                 f.write(chunk)
+    def download_default_audio_file(self):
+        session = requests.Session()
+        response = session.get(self.audio_file_url, stream=True)
+
+        file_name = 'custom.mp3'
+        file_name_split = splitext(file_name)
+        ext = file_name_split[len(file_name_split) - 1]
+        if ext != '.mp3':
+            self.speak_dialog("Only mp3 files are accepted. Using default.")
+
+        with open(join(self.audio_dir, file_name), "wb") as f:
+            for chunk in response.iter_content(2048):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+                    f.flush()
 
     def stop(self):
         if self.process and self.process.poll() is None:
