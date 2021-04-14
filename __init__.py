@@ -26,15 +26,15 @@ class WhiteNoise(MycroftSkill):
 
         if isfile(join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')):
             self.audio_file = join(abspath(dirname(__file__)), 'audio_files', 'custom.mp3')
-
-        elif self.url:
-            self.log.info('Using custom mp3 from ' + self.url)
-            if self._valid_extension(self.url):
-                self.audio_file = self.url
-            else:
-                self.url = None
-                self.log.info('Error, Custom file must be mp3, using default.')
-                self.speak_dialog("Only mp3 files are accepted. Using default.")
+        #
+        # elif self.url:
+        #     self.log.info('Using custom mp3 from ' + self.url)
+        #     if self._valid_extension(self.url):
+        #         self.audio_file = self.url
+        #     else:
+        #         self.url = None
+        #         self.log.info('Error, Custom file must be mp3, using default.')
+        #         self.speak_dialog("Only mp3 files are accepted. Using default.")
 
         else:
             self.log.info('Custom mp3 not found, using default.')
@@ -45,25 +45,6 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         self.speak_dialog('noise.white')
         wait_while_speaking()
-
-        if self.url:
-            self.log.info('Using custom mp3 from ' + self.url)
-            if self._valid_extension(self.url):
-                self.audio_file = self.url
-            else:
-                self.url = None
-                self.log.info('Error, Custom file must be mp3, using default.')
-                self.speak_dialog("Only mp3 files are accepted. Using default.")
-
-        self.url = self.settings.get('audio_file_url', '')
-        if self.url:
-            self.log.info('Using custom mp3 from ' + self.url)
-            if self._valid_extension(self.url):
-                self.audio_file = self.url
-            else:
-                self.url = None
-                self.log.info('Error, Custom file must be mp3, using default.')
-                self.speak_dialog("Only mp3 files are accepted. Using default.")
 
         secs = None
         if message.data.get('duration', None):
@@ -131,8 +112,7 @@ class WhiteNoise(MycroftSkill):
         return True
 
     def on_settings_changed(self):
-        # download new file
-        pass
+        self.download_default_audio_file(self.url)
 
     def stop(self):
         if self.process and self.process.poll() is None:
