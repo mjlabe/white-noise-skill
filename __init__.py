@@ -15,8 +15,6 @@ from mycroft.util.parse import extract_number
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
-        self.gpio_process = subprocess.Popen(['python', join(abspath(dirname(__file__)), 'gpio.py')])
-
         MycroftSkill.__init__(self)
 
     def initialize(self):
