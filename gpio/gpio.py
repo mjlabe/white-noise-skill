@@ -4,6 +4,7 @@ from subprocess import call
 
 import RPi.GPIO as GPIO
 import daemon
+import websocket
 
 
 def gpio_daemon():
@@ -42,4 +43,7 @@ def run():
 
 
 if __name__ == "__main__":
+    websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("ws://localhost:8181/core")
+    ws.run_forever()
     run()
