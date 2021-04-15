@@ -1,4 +1,5 @@
 import re
+import subprocess
 import time
 from multiprocessing import Process
 from os.path import join, isfile, splitext, abspath, dirname
@@ -14,6 +15,8 @@ from mycroft.util.parse import extract_number
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
+        self.gpio_process = subprocess.Popen(['python', join(abspath(dirname(__file__)), 'gpio.py')])
+
         MycroftSkill.__init__(self)
 
     def initialize(self):
