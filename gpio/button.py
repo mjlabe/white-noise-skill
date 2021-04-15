@@ -4,7 +4,7 @@ from subprocess import call
 
 import RPi.GPIO as GPIO
 
-from .lights import my_led as led
+from gpio.lights import my_led as led
 
 gpio_pin = 23  # The GPIO pin the button is attached to
 press_threshold = 2  # If button is held this length of time, tells system to leave light on

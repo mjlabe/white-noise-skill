@@ -4,7 +4,7 @@ from os.path import join, dirname, abspath
 import daemon
 import websocket
 
-from .lights import on_message, on_error, on_close
+from gpio.lights import on_message, on_error, on_close
 
 
 def start_ws():
