@@ -1,2 +1,2 @@
 RPi.GPIO==0.7.0
-websocket==0.2.1
+websocket-client==0.58.0
