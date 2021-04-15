@@ -4,7 +4,7 @@ from subprocess import call
 
 import RPi.GPIO as GPIO
 
-from gpio.lights import my_led as led
+from .lights import my_led as led
 
 gpio_pin = 23  # The GPIO pin the button is attached to
 press_threshold = 2  # If button is held this length of time, tells system to leave light on
@@ -26,6 +26,7 @@ while True:
             if app_state == 0:
                 call(['python', join(abspath(dirname(__file__)), 'mbus.py'), 'localhost', 'noise.white.intent'])
                 led.start()
+                led.set_state(led.ON)
                 app_state = 1
             if app_state == 1:
                 call(['python', join(abspath(dirname(__file__)), 'mbus.py'), "localhost", "mycroft.stop"])

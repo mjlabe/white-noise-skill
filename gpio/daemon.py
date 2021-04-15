@@ -1,5 +1,21 @@
+import subprocess
+from os.path import join, dirname, abspath
+
 import daemon
-from gpio.lights import start_ws
+import websocket
+
+from .lights import on_message, on_error, on_close
+
+
+def start_ws():
+    process = subprocess.Popen(['python', join(abspath(dirname(__file__)), 'button.py')])
+    print("Started button watch")
+    websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("ws://localhost:8181/core",
+                                on_message=on_message,
+                                on_error=on_error,
+                                on_close=on_close)
+    ws.run_forever()
 
 
 def run():

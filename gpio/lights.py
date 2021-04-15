@@ -1,12 +1,9 @@
 import itertools
 import json
-import subprocess
 import threading
 import time
-from os.path import join, abspath, dirname
 
 import RPi.GPIO as GPIO
-import websocket
 
 
 def on_message(ws, message):
@@ -158,18 +155,3 @@ class LED:
 my_led = LED(channel=25)
 my_led.start()
 my_led.set_state(LED.PULSE_QUICK)
-process = subprocess.Popen(['python', join(abspath(dirname(__file__)), 'button.py')])
-print("Started button watch")
-
-
-def start_ws():
-    websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://localhost:8181/core",
-                                on_message=on_message,
-                                on_error=on_error,
-                                on_close=on_close)
-    ws.run_forever()
-
-
-if __name__ == "__main__":
-    start_ws()
