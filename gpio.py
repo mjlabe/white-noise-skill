@@ -9,6 +9,7 @@ gpio_pin = 23  # The GPIO pin the button is attached to
 press_threshold = 2  # If button is held this length of time, tells system to leave light on
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(gpio_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(led_pin, GPIO.OUT)
 led = GPIO.PWM(led_pin, 100)
 state = 0
 
