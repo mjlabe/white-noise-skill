@@ -2,7 +2,7 @@ import subprocess
 import websocket
 from os.path import join, dirname, abspath
 
-process = subprocess.Popen(['python', join(abspath(dirname(__file__)), "button.py")])
+process = subprocess.Popen(['python', join(abspath(dirname(__file__)), "gpio.py")])
 
 
 if __name__ == "__main__":
